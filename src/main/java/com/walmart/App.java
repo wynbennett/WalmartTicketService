@@ -63,7 +63,7 @@ public class App {
             System.out.println(
                 "show venue <venue_id>                                shows the details of a particular venue");
             System.out.println(
-                "hold seats <venue_id> <seats> <email> <contiguous>   holds a seat reservation will return a reservation id");
+                "hold seats <venue_id> <seats> <email> <contiguous>   holds a set of seats for a user");
             System.out.println(
                 "reserve <venue_id> <seat_hold_id> <email>            reserves seat hold id");
             System.out.println(
@@ -76,29 +76,37 @@ public class App {
           } else if (command.startsWith("show venue")) {
             String[] split = command.split(" ");
             int venueId = Integer.parseInt(split[2]);
+
             showVenue(venueId);
           } else if (command.startsWith("hold seats")) {
             String[] split = command.split(" ");
             int venueId = Integer.parseInt(split[2]);
             int seats = Integer.parseInt(split[3]);
             String emailAddress = split[4];
-            boolean contiguous = Boolean.parseBoolean(split[5]);
+            boolean contiguous = true;
+            if (split.length == 6) {
+              contiguous = Boolean.parseBoolean(split[5]);
+            }
+
             holdSeats(venueId, seats, emailAddress, contiguous);
           } else if (command.startsWith("reserve")) {
             String[] split = command.split(" ");
             int venueId = Integer.parseInt(split[1]);
             int seatHoldId = Integer.parseInt(split[2]);
             String emailAddress = split[3];
+
             reserveSeats(venueId, seatHoldId, emailAddress);
           } else if (command.startsWith("show reservation")) {
             String[] split = command.split(" ");
             String reservationId = split[2];
             String emailAddress = split[3];
+
             showReservation(reservationId, emailAddress);
           } else if (command.startsWith("show hold")) {
             String[] split = command.split(" ");
             int seatHoldId = Integer.parseInt(split[2]);
             String emailAddress = split[3];
+
             showSeatHold(seatHoldId, emailAddress);
           }
         } catch (Exception e) {
@@ -249,9 +257,8 @@ public class App {
         "interval to check if we should remove a seat hold in MS this should be less than the reservation time (defaults to 500ms)"));
     options.addOption(new Option("h", Constants.HOLD_TIME_SECONDS, true,
         "time to hold a seat reservation for in seconds (defaults to 600 secconds)"));
-    options.addOption(
-        new Option("c", Constants.CLIENTS, true,
-            "number of clients to simulate at one time (defaults to 1)"));
+    options.addOption(new Option("c", Constants.CLIENTS, true,
+        "number of clients to simulate at one time (defaults to 1)"));
     options.addOption(new Option("m", Constants.MAX_NUMBER_OF_SEATS, true,
         "max number seats to randomly request from a client in simulation (defaults to 2)"));
     options.addOption(new Option("w", Constants.MAX_WAIT_TIME_MS, true,
